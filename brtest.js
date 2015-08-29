@@ -115,14 +115,8 @@
                     });
                 }
             } else {
-                if (typeof num != "number") {
-                    return [{
-                        con: "unknow"
-                    }];
-                } else {
-                    return {
-                        con: "unknow"
-                    };
+                return {
+                    con: "unknow"
                 }
             }
         }
@@ -332,7 +326,7 @@
             this.statusBlock.addInLine({
                 //stauts
                 key: "count",
-                value: data.count
+                value: data.count,
             });
             this.statusBlock.addInLine({
                 //stauts
@@ -353,7 +347,7 @@
             this.statusBlock = this.addBlock([{
                 //stauts
                 key: "count",
-                value: data.count
+                value: data.count,
             }, {
                 //stauts
                 key: "status",
@@ -372,7 +366,7 @@
     //添加单块信息
     OrderInner.fn.addComp = function(data) {
         var dataArr = [{
-            key: "NO.",
+            key: "counter.",
             value: this._NO++
         }, {
             key: "record",
@@ -488,11 +482,18 @@
         var varnameStrLen = varnameStr.length,
             valueStrLen = valueStr.length;
 
+        var bigStrLen = "";
+        if (varnameStrLen > valueStrLen) {
+            bigStrLen = varnameStrLen;
+        } else {
+            bigStrLen = valueStrLen;
+        }
+
         var tempStr = "",
             errStr = "",
             varafterStr = "";
 
-        for (var i = 0; i < varnameStrLen; i++) {
+        for (var i = 0; i < bigStrLen; i++) {
             tempStr += varnameStr[i];
             if (valueStr.search(tempStr) == 0) {
                 //每次获取正确对应字符就存储起来

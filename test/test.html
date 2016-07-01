@@ -100,6 +100,34 @@ g3.order('l2');
 g3.order('l4');
 g3.order('l3');
 g3.order('l4');
+
+
+var g4 = srtest.group('测试触发顺序（有同级顺序）');
+g4.setOrder({
+    name: "s1",
+    descript: "s1 第1个触发"
+}, {
+    name: "s2",
+    descript: "s2 第2个触发"
+}, [{
+    name: "s3",
+    descript: "s3 第3或4个触发 应该显示正确"
+}, {
+    name: "s4",
+    descript: "s4 第3或4个触发 应该显示正确",
+    count: 2
+}], {
+    name: "s5",
+    descript: "s5 第5个触发 应该显示警告",
+    count: 2
+});
+
+g4.order('s1');
+g4.order('s2');
+g4.order('s4');
+g4.order('s3');
+g4.order('s4');
+g4.order('s5');
 </script>
 
 </html>

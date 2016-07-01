@@ -15,6 +15,9 @@
             return stackarr.slice(-1)[0].match(/\w+?:\/\/\/.+\d/)[0];
         }
     };
+    var getType = function(value) {
+        return Object.prototype.toString.call(value).toLowerCase().replace(/(\[object )|(])/g, '');
+    };
 
     //class
     //组容器
@@ -44,6 +47,7 @@
     };
     SrGroup.fn._appendLine = function() {
         var srline = new SrLine();
+        this.changeTotal(++this.totalCount);
         var _this = this;
         srline.onPrint = function(e) {
             if (e.beforeState == e.nowState) {
@@ -112,22 +116,43 @@
         //order的总数记录
         this._groupCount = 0;
         $.each(arguments, function(i, e) {
-            var logObj = _this.warn(e.descript || e.name);
-            var orderObj = {
-                id: i,
-                logObj: logObj,
-                max: e.max || e.count || 1,
-                min: e.min || e.count || 1,
-                count: 0
-            };
-            orderMap[e.name] = orderObj;
-            logObj.inContent.addText([{
-                k: "max",
-                v: orderObj.max
-            }, {
-                k: "min",
-                v: orderObj.min
-            }]);
+            if (getType(e) == "array") {
+                $.each(e, function(i2, e) {
+                    var logObj = _this.warn(e.descript || e.name);
+                    var orderObj = {
+                        id: i,
+                        logObj: logObj,
+                        max: e.max || e.count || 1,
+                        min: e.min || e.count || 1,
+                        count: 0
+                    };
+                    orderMap[e.name] = orderObj;
+                    logObj.inContent.addText([{
+                        k: "max",
+                        v: orderObj.max
+                    }, {
+                        k: "min",
+                        v: orderObj.min
+                    }]);
+                });
+            } else {
+                var logObj = _this.warn(e.descript || e.name);
+                var orderObj = {
+                    id: i,
+                    logObj: logObj,
+                    max: e.max || e.count || 1,
+                    min: e.min || e.count || 1,
+                    count: 0
+                };
+                orderMap[e.name] = orderObj;
+                logObj.inContent.addText([{
+                    k: "max",
+                    v: orderObj.max
+                }, {
+                    k: "min",
+                    v: orderObj.min
+                }]);
+            }
         });
         //只能执行一次
         this.setOrder = function() {
@@ -220,16 +245,22 @@
             type: state,
             k: "state",
             v: state
-        }]
-        if ((typeof text).toLowerCase() == 'string') {
-            this.ele.find('.br_test_g_line_text').text(text);
-            text && textObj.push({
-                k: "text",
-                v: text
-            });
-        }
-        if ((typeof text).toLowerCase() == 'object') {
-            textObj = textObj.concat(text);
+        }];
+
+        switch (getType(text)) {
+            case "string":
+                this.ele.find('.br_test_g_line_text').text(text);
+                text && textObj.push({
+                    k: "text",
+                    v: text
+                });
+                break;
+            case "array":
+                textObj = textObj.concat(text);
+                break;
+            case "object":
+                textObj.push(text);
+                break;
         }
         var callline = getCallLine();
         textObj.push({

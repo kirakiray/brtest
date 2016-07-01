@@ -8,7 +8,7 @@ It is a modular test framework for SugarRequire
 
 由于BrowserRequire升级2.0版本改名为SugarRequire，所以为它做的测试框架brtest升级也要更名srtest啦哈哈。
 
-当然不止更名，相关的使用方法也会变得更加自由更方便，抛弃brtest的callback形式的设定，才用面向对象的方式设定测试程序，更加直接方便。
+当然不止更名，抛弃brtest的callback形式的设定，srtest采用面向对象的方式设定测试程序，相关的使用方法也变得更自由更方便更好用。
 
 框架依赖jquery，以后会有剥离jquery的版本。
 
@@ -16,9 +16,9 @@ It is a modular test framework for SugarRequire
 
 移动端全线兼容；
 
-winPC >=IE8，ie8及以下版本需要依赖jquery-1.9.1；
+winPC >=IE8（IE8需要使用相应的jquery版本）；
 
-其他全线兼容
+其他全线兼容；
 
 ## 使用方法
 
@@ -30,10 +30,20 @@ winPC >=IE8，ie8及以下版本需要依赖jquery-1.9.1；
 <script src="brtest.js"></script>
 ```
 
-创建一个测试组视图的方法，arguments[0] 就是组标题
+### 初始化
+
+初始化函数用于设置大标题。
 
 ```javascript
-//用于创建测试组
+srtest.init({
+    title:"我是大标题"
+})
+```
+
+通过group方法生成测试组。
+
+```javascript
+//用于创建测试组  
 var g1 = srtest.group('我是第一组');
 
 //打印
@@ -42,6 +52,8 @@ g1.warn('我是g1 警告性 信息');
 g1.error('我是g1 错误 信息');
 g1.succeed('我是g1 成功 信息');
 ```
+
+通过设置函数，组标题下方会显示使用过打印的次数和相关信息。
 
 ### 重建信息
 
@@ -90,6 +102,8 @@ g1.setOrder({
 
 这个案例在执行1次以下是警告状态；1至3次内是安全提示；超过3次是错误提示；
 
+一个group只能使用一次setOrder，所以设定操作必须一次到位。
+
 ### 执行顺序和次数记录测试
 
 顺序测试常用于测试事件的触发先后顺序，异步函数的执行顺序，也会伴随着次数的记录；
@@ -108,4 +122,28 @@ g1.setOrder({
 
 上面案例设定了name为test1和test2的命令，当test1被执行1次后，在执行1次test2才能安全提示；
 
-当然也能将`count`替换`max`和`min`；
+当然也能将`count`替换`max`和`min`，设定count是必须执行这个次数；
+
+### 同级顺序和次数记录测试
+
+有时候函数执行顺序不定，但属于同一级别的执行顺序，可以设定同级顺序；
+
+通过orderTest也可以制定同级顺序规则；
+
+```javascript
+g1.setOrder({
+    name : "test1",
+    count : 1
+},[{
+    name : "test2",
+    count : 1
+},{
+    name : "test3",
+    count : 1
+}],{
+    name : "test4",
+    count : 1
+});
+```
+
+上面案例设定了name为test1、test2、test3和test4的命令，当test1被执行1次后，test2和test3的顺序哪个先后都可以，test4必须在test2或test3后执行。

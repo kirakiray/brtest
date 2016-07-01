@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>测试用</title>
+    <script src="jquery-2.2.0.min.js"></script>
+    <script src="jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="../src/srtest.css">
+    <script src="../src/srtest.js"></script>
+</head>
+
+<body>
+</body>
+<script>
+srtest.init({
+    title: "我是测试"
+});
+
+var g1 = srtest.group('测试状态提示');
+g1.log('普通');
+var l1 = g1.warn('警告');
+setTimeout(function() {
+    l1.succeed('修改警告成功');
+}, 1000);
+g1.error('错误');
+g1.succeed('对了对了');
+
+
+var g2 = srtest.group('测试触发次数');
+g2.setOrder({
+    name: "o1",
+    descript: "应该是 警告状态",
+    count: 2
+}, {
+    name: "o2",
+    descript: "应该是 正确状态",
+    count: 2
+}, {
+    name: "o3",
+    descript: "应该是 错误状态",
+    count: 1
+}, {
+    name: "o4",
+    descript: "应该是 正确",
+    min: 2,
+    max: 4
+}, {
+    name: "o5",
+    descript: "应该是 警告",
+    min: 4,
+    max: 6
+}, {
+    name: "o6",
+    descript: "应该是 错误",
+    min: 1,
+    max: 2
+});
+
+g2.order('o1');
+
+g2.order('o2');
+g2.order('o2');
+
+g2.order('o3');
+g2.order('o3');
+
+g2.order('o4');
+g2.order('o4');
+g2.order('o4');
+
+g2.order('o5');
+g2.order('o5');
+g2.order('o5');
+
+g2.order('o6');
+g2.order('o6');
+g2.order('o6');
+
+
+var g3 = srtest.group('测试触发顺序');
+g3.setOrder({
+    name: "l1",
+    descript: "第1个触发"
+}, {
+    name: "l2",
+    descript: "第2个触发"
+}, {
+    name: "l3",
+    descript: "第3个触发 应该显示错误"
+}, {
+    name: "l4",
+    descript: "第4个触发 应该显示正确",
+    count: 2
+});
+
+g3.order('l1');
+g3.order('l2');
+g3.order('l4');
+g3.order('l3');
+g3.order('l4');
+</script>
+
+</html>

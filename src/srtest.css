@@ -21,6 +21,14 @@ body {
     transition: padding ease .5s;
 }
 
+.br_test_title.warntitle {
+    background-color: #f59a0b;
+}
+
+.br_test_title.errortitle {
+    background-color: #e74c3c;
+}
+
 .br_test_container {
     padding: 20px;
     line-height: 1.6em;
@@ -63,8 +71,12 @@ body {
     content: " ";
 }
 
-.br_test_g_title.ordertest:before {
-    background: #3ec2da;
+.br_test_g_title.brtest_errtitle:before {
+    background: #e74c3c;
+}
+
+.br_test_g_title.brtest_warntitle:before {
+    background: #f59a0b;
 }
 
 .br_test_g_title_tips {

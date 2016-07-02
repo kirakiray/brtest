@@ -8,6 +8,8 @@ It is a modular test framework for SugarRequire
 
 由于BrowserRequire升级2.0版本改名为SugarRequire，所以为它做的测试框架brtest升级也要更名srtest啦哈哈。
 
+沿用了1.0的外观，改进了使用的方法；
+
 当然不止更名，抛弃brtest的callback形式的设定，srtest采用面向对象的方式设定测试程序，相关的使用方法也变得更自由更方便更好用。
 
 框架依赖jquery，以后会有剥离jquery的版本。

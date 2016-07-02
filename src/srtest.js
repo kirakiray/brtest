@@ -75,6 +75,20 @@
                     _this.changeSafe(++_this.safeCount);
                     break;
             }
+
+            //根据状态数目，设定组标题颜色   error优先级最高  其次warn 最后succeed
+            if (_this.errorCount) {
+                _this.title.removeClass('brtest_warntitle');
+                _this.title.addClass('brtest_errtitle');
+            } else if (_this.warnCount) {
+                _this.title.removeClass('brtest_errtitle');
+                _this.title.addClass('brtest_warntitle');
+            } else {
+                _this.title.removeClass('brtest_errtitle');
+                _this.title.removeClass('brtest_warntitle');
+            }
+
+            _this.onchangestate();
         };
         this.content.append(srline.ele);
         return srline;
@@ -99,6 +113,8 @@
         srline.succeed(text);
         return srline;
     };
+    //组内有数量变动
+    SrGroup.fn.onchangestate = function() {};
     //设置序列记录器
     SrGroup.fn.setOrder = function() {
         // var data = {
@@ -356,6 +372,15 @@
 
     function group(title) {
         var srgroup = new SrGroup(title);
+        srgroup.onchangestate = function() {
+            if ($srall.find('.brtest_errtitle').length) {
+                $srall.find('.br_test_title').addClass('errortitle').removeClass('warntitle');
+            } else if ($('.brtest_warntitle').length) {
+                $srall.find('.br_test_title').addClass('warntitle').removeClass('errortitle');
+            } else {
+                $srall.find('.br_test_title').removeClass('warntitle').removeClass('errortitle');
+            }
+        };
         $container.append(srgroup.ele);
         return srgroup;
     }

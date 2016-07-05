@@ -2,17 +2,19 @@
     //function
     var getCallLine = function() {
         try {
-            fuckyou();
+            var a = null;
+            a();
         } catch (e) {
             if (!e.stack) {
                 return null;
             }
-            var stackarr = e.stack.toString().split(/\n/g).filter(function(e) {
-                if (e) {
-                    return e;
-                }
+            // console.log(e.stack);
+            var linkArr = [];
+            $.each(e.stack.toString().split(/\n/g), function(i, e) {
+                var m_arr = e.match(/\w+?:\/\/\/.+\d/);
+                linkArr.push(m_arr && m_arr[0]);
             });
-            return stackarr.slice(-1)[0].match(/\w+?:\/\/\/.+\d/)[0];
+            return linkArr;
         }
     };
     var getType = function(value) {
@@ -45,8 +47,14 @@
     SrGroup.fn.changeError = function(num) {
         this.ele.find('.error_content').text(num);
     };
-    SrGroup.fn._appendLine = function() {
+    SrGroup.fn._appendLine = function(_cline) {
         var srline = new SrLine();
+
+        //设置输入点
+        var calllines = _cline || getCallLine();
+        // console.log(calllines);
+        srline._callline = calllines[4];
+
         this.changeTotal(++this.totalCount);
         var _this = this;
         srline.onPrint = function(e) {
@@ -103,6 +111,11 @@
         srline.warn(text);
         return srline;
     };
+    //给order用的提示
+    SrGroup.fn._lineTip = function() {
+        var srline = this._appendLine();
+        return srline;
+    };
     SrGroup.fn.error = function(text) {
         var srline = this._appendLine();
         srline.error(text);
@@ -127,32 +140,20 @@
         var orderMap = this._orderMap || (this._orderMap = {});
         var _this = this;
 
+        var callline = getCallLine()[3];
+
         //当前开始的id
         this._orderId = 0;
         //order的总数记录
         this._groupCount = 0;
         $.each(arguments, function(i, e) {
-            if (getType(e) == "array") {
-                $.each(e, function(i2, e) {
-                    var logObj = _this.warn(e.descript || e.name);
-                    var orderObj = {
-                        id: i,
-                        logObj: logObj,
-                        max: e.max || e.count || 1,
-                        min: e.min || e.count || 1,
-                        count: 0
-                    };
-                    orderMap[e.name] = orderObj;
-                    logObj.inContent.addText([{
-                        k: "max",
-                        v: orderObj.max
-                    }, {
-                        k: "min",
-                        v: orderObj.min
-                    }]);
-                });
-            } else {
-                var logObj = _this.warn(e.descript || e.name);
+            var incall = function(i, e) {
+                var logObj = _this._lineTip();
+                //强制替换callline
+                logObj._callline = callline;
+                logObj.warn(e.descript || e.name);
+
+
                 var orderObj = {
                     id: i,
                     logObj: logObj,
@@ -168,7 +169,15 @@
                     k: "min",
                     v: orderObj.min
                 }]);
+            };
+            if (getType(e) == "array") {
+                $.each(e, function(i2, e) {
+                    incall(i, e);
+                });
+            } else {
+                incall(i, e);
             }
+            incall = null;
         });
         //只能执行一次
         this.setOrder = function() {
@@ -177,6 +186,10 @@
     };
     SrGroup.fn.order = function(name) {
         var orderObj = this._orderMap[name];
+
+        var calllines = getCallLine();
+        // console.log(calllines);
+        orderObj.logObj._callline = calllines[3];
 
         //顺序计算
         if (orderObj.id > this._orderId) {
@@ -278,7 +291,12 @@
                 textObj.push(text);
                 break;
         }
-        var callline = getCallLine();
+
+        //获取注册点
+        var callline = this._callline;
+        if (!callline) {
+            callline = getCallLine()[4];
+        }
         textObj.push({
             type: "console",
             k: "position",
@@ -287,6 +305,8 @@
                 console.log(callline);
             }
         });
+        this._callline = null;
+
         this.inContent.addText(textObj);
 
         var beforeState = this._state;
@@ -360,13 +380,32 @@
     var $container = $('<div class="br_test_container"></div>');
     $srall.append($container);
 
+    var setNarrow = function() {
+        $srall.addClass('narrow_all');
+        $srall.prepend('<div class="narrow_pop">↑</div>');
+        $srall.find('.narrow_pop').click(function(e) {
+            if ($srall.hasClass('narrow_open')) {
+                $srall.removeClass('narrow_open');
+            } else {
+                $srall.addClass('narrow_open');
+            }
+        });
+    };
+
     //main
     function srInit(options) {
         var defaults = {
-            title: "SRTEST"
+            title: "SRTEST",
+            narrow: false
         };
         $.extend(defaults, options);
         $srall.find('.br_test_title').text(defaults.title);
+
+        //判断是否需要设置narrow模式
+        if (defaults.narrow) {
+            setNarrow();
+        }
+
         $('body').append($srall);
     };
 

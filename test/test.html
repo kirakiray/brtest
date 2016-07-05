@@ -14,7 +14,8 @@
 </body>
 <script>
 srtest.init({
-    title: "我是测试"
+    title: "我是测试",
+    // narrow: true
 });
 
 var g1 = srtest.group('测试状态提示');
@@ -60,7 +61,10 @@ g2.setOrder({
 g2.order('o1');
 
 g2.order('o2');
-g2.order('o2');
+var order_o2 = function() {
+    g2.order('o2');
+};
+order_o2();
 
 g2.order('o3');
 g2.order('o3');

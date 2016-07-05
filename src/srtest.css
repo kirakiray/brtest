@@ -11,6 +11,45 @@ body {
     font-family: 'Microsoft Yahei';
 }
 
+.br_test_all.narrow_all {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 41px;
+    height: 41px;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all ease .5s;
+}
+
+.br_test_all.narrow_all.narrow_open {
+    min-width: 320px;
+    width: 50%;
+    height: 90%;
+    border-radius: 0px;
+    overflow-y: auto;
+}
+
+.br_test_all.narrow_all .narrow_pop {
+    display: inline-block;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 31px;
+    height: 31px;
+    line-height: 31px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    background: #3ec2da;
+    transform: rotateX(0deg);
+    transition: all ease .5s;
+}
+
+.br_test_all.narrow_all.narrow_open .narrow_pop {
+    transform: rotateX(180deg);
+}
+
 .br_test_title {
     padding: 0 20px;
     height: 40px;

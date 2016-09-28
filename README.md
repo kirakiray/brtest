@@ -29,7 +29,7 @@ winPC >=IE8（IE8需要使用相应的jquery版本）；
 ```html
 <link rel="stylesheet" type="text/css" href="srtest.css" />
 <script src="jquery-2.2.0.js"></script>
-<script src="brtest.js"></script>
+<script src="srtest.js"></script>
 ```
 
 ### 初始化

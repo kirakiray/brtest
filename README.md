@@ -18,7 +18,9 @@ It is a modular test framework for SugarRequire
 
 移动端全线兼容；
 
-winPC >=IE8（IE8需要使用相应的jquery版本）；
+winPC >=IE8（IE8需要使用相应的jquery版本，IE8 IE9的打印看不到测试注册定位）；
+
+勉强兼容到ie6（只能看到颜色是否正确，样式布局没兼容）；
 
 其他全线兼容；
 
